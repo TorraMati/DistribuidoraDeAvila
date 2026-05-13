@@ -1,0 +1,147 @@
+/* ============================================
+   PANEL ADMIN — Estilos adicionales
+   ============================================ */
+
+/* LOGIN */
+.admin-login {
+  min-height: calc(100vh - 70px);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--gray-light); padding: 20px;
+}
+.login-card {
+  background: var(--white); border-radius: 16px;
+  padding: 48px 40px; text-align: center;
+  box-shadow: var(--shadow-hover); width: 100%; max-width: 360px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.login-icon { font-size: 3rem; }
+.login-card h1 { font-size: 1.5rem; color: var(--dark); }
+.login-card p { color: var(--text-muted); font-size: 0.9rem; }
+.login-hint { font-size: 0.82rem; }
+
+/* MAIN PANEL */
+.admin-main {
+  max-width: 1100px; margin: 0 auto;
+  padding: 32px 20px 80px;
+  display: flex; flex-direction: column; gap: 32px;
+}
+
+.admin-section {
+  background: var(--white); border-radius: 14px;
+  padding: 28px 28px 32px;
+  box-shadow: var(--shadow);
+}
+.admin-section h2 { font-size: 1.2rem; color: var(--dark); margin-bottom: 8px; }
+.section-desc { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 20px; }
+
+/* FORMATO EXCEL */
+.upload-format {
+  background: var(--gray-light);
+  border-radius: 10px; padding: 16px 20px;
+  margin-bottom: 20px; font-size: 0.88rem;
+}
+.upload-format strong { display: block; margin-bottom: 10px; }
+.format-table { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.format-row {
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+.format-row span {
+  background: var(--white); padding: 6px 8px;
+  border-radius: 6px; text-align: center; font-size: 0.8rem;
+  border: 1px solid var(--gray-mid);
+}
+.format-row.header-row span {
+  background: var(--dark); color: var(--green);
+  font-weight: 700;
+}
+.format-note { color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
+.format-note code {
+  background: var(--dark); color: var(--green);
+  padding: 1px 6px; border-radius: 4px; font-size: 0.82rem;
+}
+
+/* DROP ZONE */
+.drop-zone {
+  border: 2px dashed var(--gray-mid);
+  border-radius: 12px; padding: 48px 20px;
+  text-align: center; cursor: pointer;
+  transition: var(--transition);
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: var(--green); background: rgba(125, 194, 66, 0.05);
+}
+.drop-icon { font-size: 3rem; margin-bottom: 12px; }
+.drop-zone p { font-size: 0.95rem; color: var(--text-muted); }
+.drop-zone strong { color: var(--dark); }
+.drop-hint { font-size: 0.8rem; margin-top: 6px; }
+
+/* PREVIEW */
+.preview-wrap { margin-top: 24px; }
+.preview-header {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 14px;
+}
+.preview-header h3 { font-size: 1rem; color: var(--dark); }
+
+.table-scroll { overflow-x: auto; border-radius: 8px; border: 1px solid var(--gray-mid); }
+.preview-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.preview-table th {
+  background: var(--dark); color: var(--green);
+  padding: 10px 14px; text-align: left; white-space: nowrap;
+}
+.preview-table td {
+  padding: 9px 14px; border-bottom: 1px solid var(--gray-mid);
+  color: var(--text); vertical-align: middle;
+}
+.preview-table tr:last-child td { border-bottom: none; }
+.preview-table tr:hover td { background: var(--gray-light); }
+.cat-badge {
+  padding: 3px 10px; border-radius: 50px; font-size: 0.75rem; font-weight: 600;
+  background: rgba(125,194,66,0.15); color: var(--green-dark);
+  display: inline-block;
+}
+
+/* STATS */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px; margin-top: 16px;
+}
+.stat-card {
+  background: var(--gray-light); border-radius: 10px;
+  padding: 18px; text-align: center;
+}
+.stat-icon { font-size: 2rem; margin-bottom: 6px; }
+.stat-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+.stat-value { font-size: 1.6rem; font-weight: 700; color: var(--dark); margin-top: 2px; }
+
+/* BOTONES */
+.green-btn {
+  background: var(--green); color: var(--dark2);
+  padding: 11px 22px; border-radius: 8px;
+  font-weight: 700; font-size: 0.95rem;
+  transition: var(--transition);
+  display: inline-block; cursor: pointer; border: none; font-family: inherit;
+}
+.green-btn:hover { background: var(--green-dark); color: var(--white); }
+
+.outline-btn {
+  border: 2px solid var(--green); color: var(--green);
+  background: transparent; padding: 8px 18px;
+  border-radius: 8px; font-weight: 600; font-size: 0.88rem;
+  transition: var(--transition); cursor: pointer; font-family: inherit;
+}
+.outline-btn:hover { background: var(--green); color: var(--dark2); }
+
+/* DANGER */
+.danger-section { border: 1px solid #ffd5d5; }
+.danger-section h2 { color: #c0392b; }
+.danger-section p { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 16px; }
+.danger-btn {
+  background: #e74c3c; color: var(--white);
+  padding: 10px 20px; border-radius: 8px;
+  font-weight: 700; font-size: 0.9rem; cursor: pointer;
+  border: none; font-family: inherit;
+  transition: var(--transition);
+}
+.danger-btn:hover { background: #c0392b; }

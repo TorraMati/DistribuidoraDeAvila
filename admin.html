@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Admin – Distribuidora de Avila</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- SheetJS para leer archivos Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo-wrap">
+        <img src="assets/logo.png" alt="Distribuidora de Avila" class="logo-img"
+          onerror="this.style.display='none'; document.getElementById('logo-text-admin').style.display='flex';" />
+        <div id="logo-text-admin" class="logo-text" style="display:none;">
+          <span class="logo-d">D</span><span class="logo-avila">'Avila</span>
+          <small>DISTRIBUIDORA</small>
+        </div>
+      </a>
+      <span style="color:rgba(255,255,255,0.5);font-size:0.85rem;">Panel de Administración</span>
+      <a href="index.html" class="admin-link" style="margin-left:auto;">← Volver a la tienda</a>
+    </div>
+  </header>
+
+  <!-- LOGIN -->
+  <div class="admin-login" id="loginScreen">
+    <div class="login-card">
+      <div class="login-icon">🔐</div>
+      <h1>Acceso admin</h1>
+      <p>Ingresá la contraseña para gestionar los productos</p>
+      <input type="password" id="passInput" class="form-input" placeholder="Contraseña" />
+      <button class="green-btn" id="loginBtn">Ingresar</button>
+      <p class="login-hint" id="loginError" style="color:#e74c3c;display:none;">Contraseña incorrecta</p>
+    </div>
+  </div>
+
+  <!-- PANEL PRINCIPAL (oculto hasta login) -->
+  <main class="admin-main" id="adminPanel" style="display:none;">
+
+    <!-- SUBIR EXCEL -->
+    <section class="admin-section">
+      <h2>📂 Cargar / Actualizar catálogo desde Excel</h2>
+      <p class="section-desc">
+        Subí tu archivo Excel y los productos se cargarán automáticamente.
+        Si ya hay productos, se <strong>reemplazarán</strong> solo los que tengan el mismo código.
+        Los nuevos se agregan y los que ya no estén se eliminan.
+      </p>
+
+      <div class="upload-format">
+        <strong>Formato del Excel (columnas en orden):</strong>
+        <div class="format-table">
+          <div class="format-row header-row">
+            <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span>
+          </div>
+          <div class="format-row">
+            <span>Código</span><span>Nombre del producto</span><span>Categoría</span>
+            <span>Precio</span><span>Stock</span><span>URL imagen (opcional)</span>
+          </div>
+        </div>
+        <p class="format-note">
+          Categorías válidas: <code>papeleria</code> · <code>cotillon</code> · <code>bazar</code> · <code>libreria</code> · <code>reposteria</code><br>
+          La primera fila puede ser el encabezado (se detecta automáticamente).
+        </p>
+        <button class="outline-btn" id="downloadTemplate">⬇ Descargar plantilla Excel</button>
+      </div>
+
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-icon">📊</div>
+        <p><strong>Arrastrá tu Excel aquí</strong> o hacé clic para seleccionarlo</p>
+        <p class="drop-hint">Formatos: .xlsx · .xls · .csv</p>
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden />
+      </div>
+
+      <!-- Preview tabla -->
+      <div class="preview-wrap" id="previewWrap" style="display:none;">
+        <div class="preview-header">
+          <h3>Vista previa — <span id="previewCount">0</span> productos</h3>
+          <button class="green-btn" id="saveProducts">💾 Guardar en el catálogo</button>
+        </div>
+        <div class="table-scroll">
+          <table class="preview-table" id="previewTable">
+            <thead>
+              <tr><th>Código</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th></tr>
+            </thead>
+            <tbody id="previewBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESTADÍSTICAS -->
+    <section class="admin-section" id="statsSection">
+      <h2>📊 Catálogo actual</h2>
+      <div class="stats-grid" id="statsGrid"></div>
+    </section>
+
+    <!-- ACCIONES -->
+    <section class="admin-section danger-section">
+      <h2>⚠️ Zona peligrosa</h2>
+      <p>Eliminá todos los productos del catálogo. Esta acción no se puede deshacer.</p>
+      <button class="danger-btn" id="clearAllBtn">🗑 Borrar todo el catálogo</button>
+    </section>
+
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
