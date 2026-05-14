@@ -14,7 +14,8 @@
   <header class="header">
     <div class="header-inner">
       <a href="index.html" class="logo-wrap">
-        <img src="assets/logo.png" alt="Distribuidora de Avila" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-text').style.display='flex';" />
+        <img src="assets/logo.png" alt="Distribuidora de Avila" class="logo-img"
+          onerror="this.style.display='none';document.getElementById('logo-text').style.display='flex';" />
         <div id="logo-text" class="logo-text" style="display:none;">
           <span class="logo-d">D</span><span class="logo-avila">'Avila</span>
           <small>DISTRIBUIDORA</small>
@@ -40,7 +41,10 @@
     <div class="hero-content">
       <h1>Papelería · Cotillón · Bazar<br>Librería · Repostería</h1>
       <p>Armá tu pedido y lo recibís en Pehuajó o lo retirás en el local</p>
-      <div class="hero-address">📍 Av. Balcarce 170, Pehuajó · <a href="https://wa.me/5492396618956" target="_blank">💬 Consultar por WhatsApp</a></div>
+      <div class="hero-address">
+        📍 Av. Balcarce 170, Pehuajó
+        <a href="https://wa.me/5492396618956" target="_blank">💬 Consultar por WhatsApp</a>
+      </div>
     </div>
   </section>
 
@@ -54,20 +58,18 @@
     <button class="cat-btn" data-cat="reposteria">🎂 Repostería</button>
   </nav>
 
-  <!-- CONTENIDO PRINCIPAL -->
+  <!-- CONTENIDO -->
   <main class="main-content">
     <div class="products-header">
-      <p class="products-count" id="productsCount">Cargando productos...</p>
+      <p class="products-count" id="productsCount"></p>
     </div>
 
-    <!-- ESTADO VACÍO: sin productos cargados -->
     <div class="empty-state" id="emptyState">
       <div class="empty-icon">📦</div>
       <h2>Aún no hay productos cargados</h2>
       <p>El administrador debe subir el catálogo desde el <a href="admin.html">panel admin</a>.</p>
     </div>
 
-    <!-- GRID DE PRODUCTOS -->
     <div class="products-grid" id="productsGrid"></div>
   </main>
 
@@ -88,12 +90,32 @@
         <span>Total estimado:</span>
         <strong id="cartTotal">$0</strong>
       </div>
-      <p class="cart-note">* Los precios pueden variar. El vendedor te confirma el total final.</p>
+      <p class="cart-note">* Los precios pueden variar. El vendedor confirma el total final.</p>
 
       <div class="customer-form">
-        <input type="text" id="customerName" placeholder="Tu nombre" class="form-input" />
+        <input type="text" id="customerName" placeholder="Tu nombre *" class="form-input" />
         <input type="text" id="customerPhone" placeholder="Tu teléfono (opcional)" class="form-input" />
-        <textarea id="customerNote" placeholder="¿Alguna aclaración? (opcional)" class="form-textarea" rows="2"></textarea>
+
+        <!-- MEDIO DE PAGO -->
+        <div class="payment-wrap">
+          <p class="payment-label">Medio de pago *</p>
+          <div class="payment-options">
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="Efectivo" /> 💵 Efectivo
+            </label>
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="Transferencia bancaria" /> 🏦 Transferencia
+            </label>
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="Mercado Pago" /> 💳 Mercado Pago
+            </label>
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="A confirmar" /> ❓ A confirmar
+            </label>
+          </div>
+        </div>
+
+        <textarea id="customerNote" placeholder="Aclaración (opcional)" class="form-textarea" rows="2"></textarea>
       </div>
 
       <button class="whatsapp-btn" id="sendWhatsApp">
@@ -103,7 +125,6 @@
     </div>
   </aside>
 
-  <!-- TOAST NOTIFICACIÓN -->
   <div class="toast" id="toast"></div>
 
   <!-- FOOTER -->
@@ -125,6 +146,10 @@
     <p class="footer-copy">© 2025 Distribuidora de Avila · Todos los derechos reservados</p>
   </footer>
 
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
