@@ -136,6 +136,17 @@ function changeQty(id, delta) {
   updateCartUI();
 }
 
+function setQty(id, val) {
+  const n = parseInt(val, 10);
+  if (!cart[id]) return;
+  if (isNaN(n) || n <= 0) {
+    delete cart[id];
+  } else {
+    cart[id].qty = Math.min(n, 9999);
+  }
+  updateCartUI();
+}
+
 function updateCartUI() {
   const items = Object.values(cart);
   const total = items.reduce((s, i) => s + (parseFloat(i.precio) || 0) * i.qty, 0);
@@ -163,7 +174,9 @@ function updateCartUI() {
           <p class="cart-item-price">${formatPrice(item.precio)} c/u</p>
           <div class="cart-item-qty">
             <button class="qty-btn" onclick="changeQty('${item.id}', -1)">−</button>
-            <span class="qty-val">${item.qty}</span>
+            <input type="number" class="qty-input" min="1" max="9999" value="${item.qty}"
+              onchange="setQty('${item.id}', this.value)"
+              onclick="this.select()" />
             <button class="qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
           </div>
         </div>

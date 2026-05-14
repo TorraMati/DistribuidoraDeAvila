@@ -235,12 +235,23 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .cart-item-price { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
 .cart-item-qty { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
 .qty-btn {
-  width: 26px; height: 26px; border-radius: 50%;
+  width: 28px; height: 28px; border-radius: 50%;
   background: var(--gray-light); font-size: 1rem; font-weight: 700;
-  display: flex; align-items: center; justify-content: center; transition: var(--transition);
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition); flex-shrink: 0;
 }
 .qty-btn:hover { background: var(--green); color: var(--white); }
-.qty-val { font-size: 0.88rem; font-weight: 700; min-width: 20px; text-align: center; }
+.qty-input {
+  width: 52px; height: 28px;
+  text-align: center; font-family: inherit;
+  font-size: 0.9rem; font-weight: 700;
+  border: 1.5px solid var(--gray-mid); border-radius: 6px;
+  padding: 0 2px; background: var(--white);
+  -moz-appearance: textfield;
+}
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.qty-input:focus { outline: none; border-color: var(--green); }
 .cart-item-remove { font-size: 1rem; color: #ccc; flex-shrink: 0; align-self: center; transition: var(--transition); }
 .cart-item-remove:hover { color: #e74c3c; }
 
