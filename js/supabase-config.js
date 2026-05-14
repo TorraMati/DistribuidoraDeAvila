@@ -3,8 +3,8 @@
 // Pegá aquí los datos de tu proyecto (ver instrucciones en admin.html)
 // ============================================================
 
-const SUPABASE_URL     = 'PEGAR-AQUI';  // ej: https://xyzabc.supabase.co
-const SUPABASE_ANON_KEY = 'PEGAR-AQUI'; // clave anon/public del proyecto
+const SUPABASE_URL     = 'https://nfzmfxeysnpqapalpgpb.supabase.co';  // sin /rest/v1/ al final
+const SUPABASE_ANON_KEY = 'sb_publishable_plad-JmIbItPxp5LUNlKjQ_IB_hxq3Q'; // clave anon/public del proyecto
 
 (function () {
   const configured = typeof supabase !== 'undefined' &&
