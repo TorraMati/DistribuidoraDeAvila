@@ -56,20 +56,42 @@ async function loadAdminProducts() {
 // ---- GUARDAR EN BASE DE DATOS ----
 async function saveToDatabase(products) {
   if (window.SUPABASE_CONFIGURED && window.db) {
-    // Obtener IDs actuales y borrar todo antes de insertar
-    const { data: existing } = await window.db.from('products').select('id');
-    const existingIds = (existing || []).map(r => r.id);
-    if (existingIds.length) {
-      for (let i = 0; i < existingIds.length; i += 1000) {
-        await window.db.from('products').delete().in('id', existingIds.slice(i, i + 1000));
-      }
+
+    showProgress('Borrando catálogo anterior…', 0);
+
+    // Obtener TODOS los IDs actuales con paginación (Supabase limita a 1000 por consulta)
+    let existingIds = [];
+    let from = 0;
+    while (true) {
+      const { data } = await window.db.from('products').select('id').range(from, from + 999);
+      if (!data || data.length === 0) break;
+      existingIds.push(...data.map(r => r.id));
+      if (data.length < 1000) break;
+      from += 1000;
     }
-    // Insertar en lotes
-    const BATCH = 500;
+
+    // Borrar en lotes de 200
+    for (let i = 0; i < existingIds.length; i += 200) {
+      await window.db.from('products').delete().in('id', existingIds.slice(i, i + 200));
+    }
+
+    // Insertar en lotes de 100 (evita límite de tamaño de payload)
+    const BATCH = 100;
+    let inserted = 0;
     for (let i = 0; i < products.length; i += BATCH) {
       const { error } = await window.db.from('products').insert(products.slice(i, i + BATCH));
-      if (error) throw error;
+      if (error) {
+        console.error(`Error en lote ${i}–${i + BATCH}:`, error);
+        // Continúa con el siguiente lote en lugar de abortar
+      } else {
+        inserted += Math.min(BATCH, products.length - i);
+      }
+      const pct = Math.round((i + BATCH) / products.length * 100);
+      showProgress(`Subiendo productos… ${Math.min(inserted, products.length)} de ${products.length}`, pct);
     }
+
+    hideProgress();
+
   } else {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
   }
@@ -403,6 +425,29 @@ document.getElementById('downloadTemplate').addEventListener('click', () => {
   XLSX.utils.book_append_sheet(wb, ws, 'Productos');
   XLSX.writeFile(wb, 'plantilla-distribuidora-avila.xlsx');
 });
+
+// ---- BARRA DE PROGRESO ----
+function showProgress(msg, pct) {
+  let wrap = document.getElementById('progressWrap');
+  if (!wrap) {
+    wrap = document.createElement('div');
+    wrap.id = 'progressWrap';
+    wrap.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:500;background:var(--dark);color:#fff;padding:10px 20px;display:flex;align-items:center;gap:14px;font-family:inherit;font-size:0.9rem;';
+    wrap.innerHTML = `<span id="progressMsg"></span>
+      <div style="flex:1;background:rgba(255,255,255,0.2);border-radius:50px;height:8px;">
+        <div id="progressBar" style="height:100%;background:var(--green);border-radius:50px;transition:width 0.3s;width:0%"></div>
+      </div>
+      <span id="progressPct" style="min-width:36px;text-align:right;font-weight:700;color:var(--green);">0%</span>`;
+    document.body.prepend(wrap);
+  }
+  document.getElementById('progressMsg').textContent = msg;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+function hideProgress() {
+  const wrap = document.getElementById('progressWrap');
+  if (wrap) wrap.remove();
+}
 
 // ---- COMPRIMIR IMAGEN A BASE64 (fallback sin Storage) ----
 function compressToBase64(file, maxWidth = 700, quality = 0.65) {
