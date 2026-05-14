@@ -27,12 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadProducts() {
   try {
     if (window.SUPABASE_CONFIGURED && window.db) {
-      const { data, error } = await window.db
-        .from('products')
-        .select('*')
-        .order('nombre');
-      if (error) throw error;
-      allProducts = data || [];
+      let all = [], from = 0;
+      while (true) {
+        const { data, error } = await window.db
+          .from('products').select('*').order('nombre').range(from, from + 999);
+        if (error) throw error;
+        if (!data || data.length === 0) break;
+        all.push(...data);
+        if (data.length < 1000) break;
+        from += 1000;
+      }
+      allProducts = all;
     } else {
       const raw = localStorage.getItem('davila_products');
       allProducts = raw ? JSON.parse(raw) : [];

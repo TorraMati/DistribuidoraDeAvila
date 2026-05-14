@@ -37,9 +37,17 @@ async function tryLogin() {
 async function loadAdminProducts() {
   try {
     if (window.SUPABASE_CONFIGURED && window.db) {
-      const { data, error } = await window.db.from('products').select('*').order('nombre');
-      if (error) throw error;
-      allAdminProducts = data || [];
+      let all = [], from = 0;
+      while (true) {
+        const { data, error } = await window.db
+          .from('products').select('*').order('nombre').range(from, from + 999);
+        if (error) throw error;
+        if (!data || data.length === 0) break;
+        all.push(...data);
+        if (data.length < 1000) break;
+        from += 1000;
+      }
+      allAdminProducts = all;
     } else {
       const raw = localStorage.getItem(STORAGE_KEY);
       allAdminProducts = raw ? JSON.parse(raw) : [];
