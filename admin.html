@@ -14,17 +14,27 @@
 
   <!-- HEADER -->
   <header class="header">
-    <div class="header-inner">
-      <a href="index.html" class="logo-wrap">
-        <img src="assets/logo.png" alt="Distribuidora de Avila" class="logo-img"
-          onerror="this.style.display='none';document.getElementById('logo-text-admin').style.display='flex';" />
-        <div id="logo-text-admin" class="logo-text" style="display:none;">
-          <span class="logo-d">D</span><span class="logo-avila">'Avila</span>
-          <small>DISTRIBUIDORA</small>
-        </div>
-      </a>
-      <span style="color:rgba(255,255,255,0.5);font-size:0.85rem;">Panel de Administración</span>
-      <a href="index.html" class="admin-link" style="margin-left:auto;">← Volver a la tienda</a>
+    <div class="header-inner header-inner--admin">
+
+      <div class="hd-start">
+        <a href="index.html" class="logo-wrap">
+          <img src="assets/logo.png" alt="Distribuidora de Avila" class="logo-img"
+            onerror="this.style.display='none';document.getElementById('logo-text-admin').style.display='flex';" />
+          <div id="logo-text-admin" class="logo-text" style="display:none;">
+            <span class="logo-name">De Avila</span>
+            <small>DISTRIBUIDORA</small>
+          </div>
+        </a>
+      </div>
+
+      <div class="hd-center" style="justify-content:center;">
+        <span class="admin-title-badge">Panel de Administración</span>
+      </div>
+
+      <div class="hd-end">
+        <a href="index.html" class="admin-link">← Tienda</a>
+      </div>
+
     </div>
   </header>
 
@@ -43,23 +53,20 @@
   <!-- PANEL PRINCIPAL -->
   <main class="admin-main" id="adminPanel" style="display:none;">
 
-    <!-- AVISO FIREBASE -->
-    <div class="firebase-banner" id="firebaseBanner" style="display:none;">
+    <!-- AVISO SUPABASE -->
+    <div class="firebase-banner" id="supabaseBanner" style="display:none;">
       <div class="fb-icon">☁️</div>
       <div class="fb-text">
         <strong>Base de datos no configurada</strong>
-        <p>Los productos se guardan solo en este navegador. Para que todos vean el catálogo, configurá Firebase siguiendo las instrucciones abajo.</p>
+        <p>Los productos se guardan solo en este navegador. Para que todos vean el catálogo, configurá Supabase (instrucciones abajo).</p>
       </div>
-      <button class="outline-btn" onclick="document.getElementById('firebaseSetup').scrollIntoView({behavior:'smooth'})">Ver instrucciones</button>
+      <button class="outline-btn" onclick="document.getElementById('supabaseSetup').scrollIntoView({behavior:'smooth'})">Ver instrucciones</button>
     </div>
 
     <!-- SUBIR EXCEL -->
     <section class="admin-section">
       <h2>📂 Cargar / Actualizar catálogo desde Excel</h2>
-      <p class="section-desc">
-        Subí tu archivo Excel y los productos se cargarán automáticamente para todos.
-        Al guardar, reemplaza el catálogo completo.
-      </p>
+      <p class="section-desc">Subí tu Excel y los productos se actualizan automáticamente para todos. Al guardar reemplaza el catálogo completo.</p>
 
       <div class="upload-format">
         <strong>Formato del Excel (columnas en orden):</strong>
@@ -68,30 +75,29 @@
             <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span>
           </div>
           <div class="format-row">
-            <span>Código</span><span>Nombre</span><span>Categoría</span>
-            <span>Precio</span><span>Stock</span><span>URL imagen</span>
+            <span>Código</span><span>Nombre</span><span>Categoría</span><span>Precio</span><span>Stock</span><span>URL imagen</span>
           </div>
         </div>
         <p class="format-note">
           Categorías: <code>papeleria</code> · <code>cotillon</code> · <code>bazar</code> · <code>libreria</code> · <code>reposteria</code>
         </p>
-        <button class="outline-btn" id="downloadTemplate">⬇ Descargar plantilla Excel</button>
+        <button class="outline-btn" id="downloadTemplate">⬇ Descargar plantilla</button>
       </div>
 
       <div class="drop-zone" id="dropZone">
         <div class="drop-icon">📊</div>
-        <p><strong>Arrastrá tu Excel aquí</strong> o hacé clic para seleccionarlo</p>
-        <p class="drop-hint">Formatos: .xlsx · .xls · .csv</p>
+        <p><strong>Arrastrá tu Excel aquí</strong> o hacé clic</p>
+        <p class="drop-hint">.xlsx · .xls · .csv</p>
         <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden />
       </div>
 
       <div class="preview-wrap" id="previewWrap" style="display:none;">
         <div class="preview-header">
           <h3>Vista previa — <span id="previewCount">0</span> productos</h3>
-          <button class="green-btn" id="saveProducts">💾 Guardar en el catálogo</button>
+          <button class="green-btn" id="saveProducts">💾 Guardar catálogo</button>
         </div>
         <div class="table-scroll">
-          <table class="preview-table" id="previewTable">
+          <table class="preview-table">
             <thead><tr><th>Código</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th></tr></thead>
             <tbody id="previewBody"></tbody>
           </table>
@@ -130,58 +136,60 @@
       </div>
     </section>
 
-    <!-- INSTRUCCIONES FIREBASE -->
-    <section class="admin-section firebase-setup-section" id="firebaseSetup">
-      <h2>☁️ Configurar base de datos (Firebase)</h2>
-      <p class="section-desc">
-        Para que el catálogo sea visible desde cualquier dispositivo, necesitás conectar Firebase.
-        Es gratis para el uso de esta tienda.
-      </p>
+    <!-- INSTRUCCIONES SUPABASE -->
+    <section class="admin-section firebase-setup-section" id="supabaseSetup">
+      <h2>☁️ Configurar base de datos (Supabase)</h2>
+      <p class="section-desc">Gratis para esta tienda. Una vez configurado, todos los dispositivos ven el mismo catálogo.</p>
 
       <div class="setup-steps">
         <div class="step">
           <span class="step-num">1</span>
           <div>
-            <strong>Creá un proyecto en Firebase</strong>
-            <p>Entrá a <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> con tu cuenta Google y hacé clic en "Agregar proyecto".</p>
+            <strong>Creá un proyecto en Supabase</strong>
+            <p>Entrá a <a href="https://supabase.com" target="_blank">supabase.com</a> → New project. Anotá la contraseña de la base de datos.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-num">2</span>
           <div>
-            <strong>Activá Firestore Database</strong>
-            <p>En el menú lateral → "Firestore Database" → "Crear base de datos" → modo Producción → elegí ubicación <em>southamerica-east1</em>.</p>
+            <strong>Creá la tabla de productos</strong>
+            <p>En el panel → SQL Editor → New query → pegá esto y ejecutá:</p>
+            <pre class="code-block">create table if not exists products (
+  id text primary key,
+  codigo text,
+  nombre text not null,
+  categoria text,
+  precio float8 default 0,
+  stock text,
+  imagen text
+);
+
+alter table products enable row level security;
+create policy "read_all"   on products for select using (true);
+create policy "insert_all" on products for insert with check (true);
+create policy "update_all" on products for update using (true);
+create policy "delete_all" on products for delete using (true);</pre>
           </div>
         </div>
         <div class="step">
           <span class="step-num">3</span>
           <div>
-            <strong>Configurá las reglas de seguridad</strong>
-            <p>En Firestore → pestaña "Reglas" → reemplazá todo con:</p>
-            <pre class="code-block">rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /catalog/{doc} {
-      allow read: true;
-      allow write: true;
-    }
-  }
-}</pre>
-            <p>Publicá las reglas.</p>
+            <strong>Creá el bucket de imágenes (para fotos)</strong>
+            <p>Storage → New bucket → nombre: <em>product-images</em> → marcá <em>Public bucket</em> → Create.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-num">4</span>
           <div>
-            <strong>Obtené la configuración</strong>
-            <p>En el proyecto → ⚙️ Configuración → "Tus apps" → hacé clic en "&lt;/&gt;" (web) → registrá la app → copiá el objeto <code>firebaseConfig</code>.</p>
+            <strong>Copiá las claves del proyecto</strong>
+            <p>Settings → API → copiá <em>Project URL</em> y <em>anon public key</em>.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-num">5</span>
           <div>
-            <strong>Pegalo en el archivo <code>js/firebase-config.js</code></strong>
-            <p>Abrí ese archivo y reemplazá los valores <code>PEGAR-AQUI</code> con los de tu proyecto.</p>
+            <strong>Pegá las claves en <code>js/supabase-config.js</code></strong>
+            <p>Abrí ese archivo y reemplazá <code>PEGAR-AQUI</code> con los valores copiados. Guardá y subí a GitHub.</p>
           </div>
         </div>
       </div>
@@ -190,7 +198,7 @@ service cloud.firestore {
     <!-- ZONA PELIGROSA -->
     <section class="admin-section danger-section">
       <h2>⚠️ Zona peligrosa</h2>
-      <p>Eliminá todos los productos del catálogo. Esta acción no se puede deshacer.</p>
+      <p>Eliminá todos los productos del catálogo. No se puede deshacer.</p>
       <button class="danger-btn" id="clearAllBtn">🗑 Borrar todo el catálogo</button>
     </section>
 
@@ -231,13 +239,28 @@ service cloud.firestore {
           <label>Stock</label>
           <input type="text" id="editStock" class="form-input" placeholder="Ej: 50" />
         </div>
+
+        <!-- FOTO DEL PRODUCTO -->
         <div class="form-row">
-          <label>URL imagen (opcional)</label>
+          <label>Foto del producto</label>
+          <div class="img-upload-wrap">
+            <img id="editImagePreview" class="img-preview" alt="Vista previa" />
+            <label class="img-upload-btn">
+              <input type="file" id="editImageFile" accept="image/*" capture="environment" />
+              📷 Sacar foto / Elegir imagen
+            </label>
+            <p class="img-hint">En el celular abre la cámara directamente</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>O pegá URL de imagen</label>
           <input type="url" id="editImagen" class="form-input" placeholder="https://..." />
         </div>
+
         <div class="modal-footer">
           <button type="button" class="outline-btn" id="modalCancel">Cancelar</button>
-          <button type="submit" class="green-btn">💾 Guardar cambios</button>
+          <button type="submit" class="green-btn" id="saveEditBtn">💾 Guardar cambios</button>
         </div>
       </form>
     </div>
@@ -245,10 +268,8 @@ service cloud.firestore {
 
   <div class="toast" id="toast"></div>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="js/firebase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-config.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // ============================================================
-// DISTRIBUIDORA DE AVILA — Tienda principal
+// DISTRIBUIDORA DE AVILA — Tienda principal (Supabase)
 // ============================================================
 
 const WA_NUMBER = '5492396618956';
@@ -18,17 +18,21 @@ let cart = {};
 let currentCat = 'todas';
 let searchQuery = '';
 
-// ---- INICIALIZACIÓN ----
 document.addEventListener('DOMContentLoaded', () => {
   loadProducts();
   bindUI();
 });
 
+// ---- CARGA DE PRODUCTOS ----
 async function loadProducts() {
   try {
-    if (window.FIREBASE_CONFIGURED && window.db) {
-      const doc = await window.db.collection('catalog').doc('products').get();
-      allProducts = doc.exists ? (doc.data().items || []) : [];
+    if (window.SUPABASE_CONFIGURED && window.db) {
+      const { data, error } = await window.db
+        .from('products')
+        .select('*')
+        .order('nombre');
+      if (error) throw error;
+      allProducts = data || [];
     } else {
       const raw = localStorage.getItem('davila_products');
       allProducts = raw ? JSON.parse(raw) : [];
@@ -73,22 +77,20 @@ function renderProducts() {
     : 'Sin resultados';
 
   if (!filtered.length) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:#777;">
-      Sin resultados para esa búsqueda.
-    </div>`;
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:#777;">Sin resultados para esa búsqueda.</div>`;
     return;
   }
 
   grid.innerHTML = filtered.map(productCard).join('');
-  grid.querySelectorAll('.add-to-cart').forEach(btn => {
-    btn.addEventListener('click', () => addToCart(btn.dataset.id));
-  });
+  grid.querySelectorAll('.add-to-cart').forEach(btn =>
+    btn.addEventListener('click', () => addToCart(btn.dataset.id))
+  );
 }
 
 function productCard(p) {
   const catKey = normalize(p.categoria);
   const icon = CAT_ICONS[catKey] || CAT_ICONS.default;
-  const catLabel = CAT_LABELS[catKey] || p.categoria;
+  const label = CAT_LABELS[catKey] || p.categoria;
   const imgHtml = p.imagen
     ? `<img src="${escapeHtml(p.imagen)}" alt="${escapeHtml(p.nombre)}" loading="lazy"
         onerror="this.parentElement.innerHTML='<span class=\\'product-placeholder\\'>${icon}</span>'" />`
@@ -98,7 +100,7 @@ function productCard(p) {
     <div class="product-card">
       <div class="product-img-wrap">
         ${imgHtml}
-        <span class="product-cat-tag">${escapeHtml(catLabel)}</span>
+        <span class="product-cat-tag">${escapeHtml(label)}</span>
       </div>
       <div class="product-info">
         ${p.codigo ? `<span class="product-code">Cód. ${escapeHtml(p.codigo)}</span>` : ''}
@@ -113,17 +115,14 @@ function productCard(p) {
 
 // ---- CARRITO ----
 function addToCart(id) {
-  const product = allProducts.find(p => p.id === id);
-  if (!product) return;
-  cart[id] ? cart[id].qty++ : (cart[id] = { ...product, qty: 1 });
+  const p = allProducts.find(x => x.id === id);
+  if (!p) return;
+  cart[id] ? cart[id].qty++ : (cart[id] = { ...p, qty: 1 });
   updateCartUI();
-  showToast(`✓ ${product.nombre} agregado`);
+  showToast(`✓ ${p.nombre} agregado`);
 }
 
-function removeFromCart(id) {
-  delete cart[id];
-  updateCartUI();
-}
+function removeFromCart(id) { delete cart[id]; updateCartUI(); }
 
 function changeQty(id, delta) {
   if (!cart[id]) return;
@@ -146,7 +145,6 @@ function updateCartUI() {
     footer.style.display = 'none';
     return;
   }
-
   footer.style.display = 'block';
   document.getElementById('cartTotal').textContent = formatPrice(total);
 
@@ -179,31 +177,20 @@ document.getElementById('sendWhatsApp').addEventListener('click', () => {
   const note = document.getElementById('customerNote').value.trim();
   const payment = document.querySelector('input[name="payment"]:checked');
 
-  if (!name) {
-    document.getElementById('customerName').focus();
-    showToast('Por favor ingresá tu nombre');
-    return;
-  }
-  if (!payment) {
-    showToast('Seleccioná un medio de pago');
-    return;
-  }
+  if (!name) { document.getElementById('customerName').focus(); showToast('Ingresá tu nombre'); return; }
+  if (!payment) { showToast('Seleccioná un medio de pago'); return; }
 
   const total = items.reduce((s, i) => s + (parseFloat(i.precio) || 0) * i.qty, 0);
-
   let msg = `¡Hola! Quisiera hacer el siguiente pedido 🛒\n\n`;
   msg += `*Cliente:* ${name}\n`;
   if (phone) msg += `*Teléfono:* ${phone}\n`;
-  msg += `*Medio de pago:* ${payment.value}\n`;
-  msg += `\n*Productos:*\n`;
-
-  items.forEach(item => {
-    const sub = (parseFloat(item.precio) || 0) * item.qty;
-    msg += `• ${item.qty}x ${item.nombre}`;
-    if (item.precio) msg += ` — ${formatPrice(sub)}`;
+  msg += `*Medio de pago:* ${payment.value}\n\n*Productos:*\n`;
+  items.forEach(i => {
+    const sub = (parseFloat(i.precio) || 0) * i.qty;
+    msg += `• ${i.qty}x ${i.nombre}`;
+    if (i.precio) msg += ` — ${formatPrice(sub)}`;
     msg += `\n`;
   });
-
   msg += `\n*Total estimado: ${formatPrice(total)}*`;
   if (note) msg += `\n\n*Aclaración:* ${note}`;
   msg += `\n\n_Aguardo confirmación. ¡Muchas gracias!_`;
@@ -222,10 +209,10 @@ function bindUI() {
     });
   });
 
-  let searchTimer;
+  let t;
   document.getElementById('searchInput').addEventListener('input', e => {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => { searchQuery = e.target.value; renderProducts(); }, 250);
+    clearTimeout(t);
+    t = setTimeout(() => { searchQuery = e.target.value; renderProducts(); }, 250);
   });
 
   document.getElementById('cartToggle').addEventListener('click', openCart);
@@ -258,7 +245,6 @@ function escapeHtml(str) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
-
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');

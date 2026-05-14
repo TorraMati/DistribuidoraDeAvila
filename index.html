@@ -13,26 +13,32 @@
   <!-- HEADER -->
   <header class="header">
     <div class="header-inner">
-      <a href="index.html" class="logo-wrap">
-        <img src="assets/logo.png" alt="Distribuidora de Avila" class="logo-img"
-          onerror="this.style.display='none';document.getElementById('logo-text').style.display='flex';" />
-        <div id="logo-text" class="logo-text" style="display:none;">
-          <span class="logo-d">D</span><span class="logo-avila">'Avila</span>
-          <small>DISTRIBUIDORA</small>
-        </div>
-      </a>
 
-      <div class="search-wrap">
-        <input type="text" id="searchInput" class="search-input" placeholder="Buscar producto..." />
-        <span class="search-icon">🔍</span>
+      <div class="hd-start">
+        <a href="index.html" class="logo-wrap">
+          <img src="assets/logo.png" alt="Distribuidora de Avila" class="logo-img"
+            onerror="this.style.display='none';document.getElementById('logo-text').style.display='flex';" />
+          <div id="logo-text" class="logo-text" style="display:none;">
+            <span class="logo-name">De Avila</span>
+            <small>DISTRIBUIDORA</small>
+          </div>
+        </a>
       </div>
 
-      <div class="header-actions">
+      <div class="hd-center">
+        <div class="search-wrap">
+          <input type="text" id="searchInput" class="search-input" placeholder="Buscar producto..." />
+          <span class="search-icon">🔍</span>
+        </div>
+      </div>
+
+      <div class="hd-end">
         <button class="cart-btn" id="cartToggle">
           🛒 <span class="cart-count" id="cartCount">0</span>
         </button>
-        <a href="admin.html" class="admin-link">Panel admin</a>
+        <a href="admin.html" class="admin-link">Admin</a>
       </div>
+
     </div>
   </header>
 
@@ -49,13 +55,15 @@
   </section>
 
   <!-- CATEGORÍAS -->
-  <nav class="cat-nav" id="catNav">
-    <button class="cat-btn active" data-cat="todas">Todas</button>
-    <button class="cat-btn" data-cat="papeleria">📝 Papelería</button>
-    <button class="cat-btn" data-cat="cotillon">🎉 Cotillón</button>
-    <button class="cat-btn" data-cat="bazar">🏠 Bazar</button>
-    <button class="cat-btn" data-cat="libreria">📚 Librería</button>
-    <button class="cat-btn" data-cat="reposteria">🎂 Repostería</button>
+  <nav class="cat-nav">
+    <div class="cat-nav-inner">
+      <button class="cat-btn active" data-cat="todas">Todas</button>
+      <button class="cat-btn" data-cat="papeleria">📝 Papelería</button>
+      <button class="cat-btn" data-cat="cotillon">🎉 Cotillón</button>
+      <button class="cat-btn" data-cat="bazar">🏠 Bazar</button>
+      <button class="cat-btn" data-cat="libreria">📚 Librería</button>
+      <button class="cat-btn" data-cat="reposteria">🎂 Repostería</button>
+    </div>
   </nav>
 
   <!-- CONTENIDO -->
@@ -96,22 +104,13 @@
         <input type="text" id="customerName" placeholder="Tu nombre *" class="form-input" />
         <input type="text" id="customerPhone" placeholder="Tu teléfono (opcional)" class="form-input" />
 
-        <!-- MEDIO DE PAGO -->
         <div class="payment-wrap">
           <p class="payment-label">Medio de pago *</p>
           <div class="payment-options">
-            <label class="pay-opt">
-              <input type="radio" name="payment" value="Efectivo" /> 💵 Efectivo
-            </label>
-            <label class="pay-opt">
-              <input type="radio" name="payment" value="Transferencia bancaria" /> 🏦 Transferencia
-            </label>
-            <label class="pay-opt">
-              <input type="radio" name="payment" value="Mercado Pago" /> 💳 Mercado Pago
-            </label>
-            <label class="pay-opt">
-              <input type="radio" name="payment" value="A confirmar" /> ❓ A confirmar
-            </label>
+            <label class="pay-opt"><input type="radio" name="payment" value="Efectivo" /> 💵 Efectivo</label>
+            <label class="pay-opt"><input type="radio" name="payment" value="Transferencia bancaria" /> 🏦 Transferencia</label>
+            <label class="pay-opt"><input type="radio" name="payment" value="Mercado Pago" /> 💳 Mercado Pago</label>
+            <label class="pay-opt"><input type="radio" name="payment" value="A confirmar" /> ❓ A confirmar</label>
           </div>
         </div>
 
@@ -140,16 +139,14 @@
       </div>
       <div class="footer-col">
         <strong>💬 Contacto</strong>
-        <a href="https://wa.me/5492396618956" target="_blank" class="footer-wa">WhatsApp: +54 9 2396 61-8956</a>
+        <a href="https://wa.me/5492396618956" target="_blank" class="footer-wa">+54 9 2396 61-8956</a>
       </div>
     </div>
     <p class="footer-copy">© 2025 Distribuidora de Avila · Todos los derechos reservados</p>
   </footer>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="js/firebase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-config.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
