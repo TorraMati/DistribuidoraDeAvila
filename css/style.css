@@ -257,7 +257,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .payment-wrap { background: var(--white); border: 1.5px solid var(--gray-mid); border-radius: 8px; padding: 10px 12px; }
 .payment-label { font-size: 0.8rem; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
-.payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.payment-options { display: flex; flex-direction: column; gap: 6px; }
 .pay-opt {
   display: flex; align-items: center; gap: 6px;
   font-size: 0.8rem; cursor: pointer;

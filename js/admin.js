@@ -286,24 +286,31 @@ document.getElementById('editForm').addEventListener('submit', async e => {
   btn.textContent = 'Guardando...'; btn.disabled = true;
 
   try {
-    let imageUrl = document.getElementById('editImagen').value.trim();
+    // Imagen: prioridad → URL manual → Storage → base64 comprimida → imagen existente
+    const existingUrl = (allAdminProducts.find(p => p.id === editingId) || {}).imagen || '';
+    let imageUrl = document.getElementById('editImagen').value.trim() || existingUrl;
 
-    // Si hay foto nueva, subirla a Supabase Storage
-    if (pendingImageFile && window.SUPABASE_CONFIGURED && window.db) {
-      const ext = pendingImageFile.name.split('.').pop() || 'jpg';
-      const filename = `${editingId}_${Date.now()}.${ext}`;
-      const { error: uploadErr } = await window.db.storage
-        .from(IMG_BUCKET)
-        .upload(filename, pendingImageFile, { upsert: true, contentType: pendingImageFile.type });
-      if (!uploadErr) {
-        const { data: urlData } = window.db.storage.from(IMG_BUCKET).getPublicUrl(filename);
-        imageUrl = urlData.publicUrl;
-      } else {
-        console.error('Error subiendo imagen:', uploadErr);
-        showToast('Advertencia: no se pudo subir la foto. Se conserva la anterior.');
+    if (pendingImageFile) {
+      let uploaded = false;
+
+      // Intentar subir a Supabase Storage
+      if (window.SUPABASE_CONFIGURED && window.db) {
+        const ext = pendingImageFile.name.split('.').pop() || 'jpg';
+        const filename = `${editingId}_${Date.now()}.${ext}`;
+        const { error: uploadErr } = await window.db.storage
+          .from(IMG_BUCKET)
+          .upload(filename, pendingImageFile, { upsert: true, contentType: pendingImageFile.type });
+        if (!uploadErr) {
+          const { data: urlData } = window.db.storage.from(IMG_BUCKET).getPublicUrl(filename);
+          imageUrl = urlData.publicUrl;
+          uploaded = true;
+        }
       }
-    } else if (pendingImageFile && !window.SUPABASE_CONFIGURED) {
-      showToast('Configurá Supabase para subir fotos al servidor.');
+
+      // Fallback: comprimir a base64 (funciona sin Storage)
+      if (!uploaded) {
+        imageUrl = await compressToBase64(pendingImageFile, 700, 0.65);
+      }
     }
 
     const updated = {
@@ -396,6 +403,25 @@ document.getElementById('downloadTemplate').addEventListener('click', () => {
   XLSX.utils.book_append_sheet(wb, ws, 'Productos');
   XLSX.writeFile(wb, 'plantilla-distribuidora-avila.xlsx');
 });
+
+// ---- COMPRIMIR IMAGEN A BASE64 (fallback sin Storage) ----
+function compressToBase64(file, maxWidth = 700, quality = 0.65) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const blobUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      const scale = Math.min(1, maxWidth / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(img.width  * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(blobUrl);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => { URL.revokeObjectURL(blobUrl); resolve(''); };
+    img.src = blobUrl;
+  });
+}
 
 // ---- UTILS ----
 function escapeHtml(str) {
