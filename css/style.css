@@ -99,10 +99,14 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .hero p { margin-top: 12px; color: rgba(255,255,255,0.75); font-size: 1rem; }
 .hero-address {
   margin-top: 16px; font-size: 0.9rem; color: rgba(255,255,255,0.6);
-  display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+  display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; align-items: center;
 }
 .hero-address a { color: var(--green); font-weight: 600; }
 .hero-address a:hover { text-decoration: underline; }
+.hero-hours {
+  margin-top: 8px; font-size: 0.82rem; color: rgba(255,255,255,0.45);
+  text-align: center;
+}
 
 /* ---- CATEGORÍAS ---- */
 .cat-nav {
