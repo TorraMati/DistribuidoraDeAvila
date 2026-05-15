@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://torramati.github.io/DistribuidoraDeAvila/sitemap.xml
